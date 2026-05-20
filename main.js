@@ -243,14 +243,14 @@ function renderProducts(productsArray) {
     const favBtn = document.createElement("button");
     favBtn.textContent = '🤍';
     favBtn.classList.add("fav-btn")
-    favBtn.addEventListener('click', () => console.log("click"));
+    favBtn.addEventListener('click', () => toggleFavorite(producto.id));
 
 
     productImageContainer.append(productImage);
     productCard.append(productImageContainer);
 
-    cardActions.append(addBtn,favBtn);
-    productInfo.append(productCategory,productTitle,productPrice,cardActions);
+    cardActions.append(addBtn, favBtn);
+    productInfo.append(productCategory, productTitle, productPrice, cardActions);
     productCard.append(productInfo);
     productsContainer.append(productCard);
   });
@@ -448,16 +448,23 @@ TAREAS:
 */
 
 function toggleFavorite(id) {
+  console.log(id);
+  const producto = products.find((producto) => producto.id === id);
 
+  if(!favorites.includes(producto)) {
+      favorites.push(producto)
+  } else {
+    favorites = favorites.filter((favorito) => favorito.id != id);
+  }
   // TODO
-
+  localStorage.setItem('favoritos',favorites);
 }
 
 
 function loadFavorites() {
-
-  // TODO
-
+  if(localStorage.getItem('favoritos')){
+    favorites = localStorage.getItem('favoritos');
+  }
 }
 
 
@@ -626,10 +633,7 @@ function init() {
 
   //fixme: cambiar a renderProducts
   getProducts();
-  setTimeout(() => renderProducts(products) , 10)
-  
-
-
+  setTimeout(() => renderProducts(products), 10)
 }
 
 
