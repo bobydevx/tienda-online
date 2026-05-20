@@ -489,12 +489,13 @@ function toggleFavorite(id) {
   const producto = products.find((producto) => producto.id === id);
 
   if(!favorites.includes(producto)) {
-      favorites.push(producto)
+      favorites.push(producto);
   } else {
     favorites = favorites.filter((favorito) => favorito.id != id);
   }
   // TODO
-  localStorage.setItem('favoritos',favorites);
+  localStorage.setItem('favoritos',JSON.stringify(favorites));
+  console.log(localStorage.getItem('favoritos'));
 }
 
 
