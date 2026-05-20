@@ -229,7 +229,7 @@ PISTA:
 new Set()
 */
 
-
+console.log(124);
 
 
 function renderCategories(productsArray) {
