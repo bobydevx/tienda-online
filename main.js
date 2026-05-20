@@ -66,6 +66,10 @@ const closeLogin =
 const loginForm =
   document.getElementById("loginForm");
 
+// eventos 
+
+
+
 
 // ========================================
 // VARIABLES GLOBALES
@@ -157,8 +161,10 @@ function getProducts() {
     then((response) => response.json()).
     then((data) => {
       products = data;
-      renderCategories(products);
 
+      renderProducts(products);   // Dibuja los productos por primera vez
+      renderCategories(products);
+      
       console.log(data);
     });
 }
@@ -208,6 +214,9 @@ productsContainer.appendChild(card);
 
 
 function renderProducts(productsArray) {
+
+  productsContainer.innerHTML = ""; //vaciar la pantalla antes de filtrar
+
   productsArray.forEach(producto => {
     const productCard = document.createElement("article");
     productCard.classList.add("product-card");
@@ -251,12 +260,14 @@ function renderProducts(productsArray) {
     productImageContainer.append(productImage);
     productCard.append(productImageContainer);
 
-    cardActions.append(addBtn,favBtn);
-    productInfo.append(productCategory,productTitle,productPrice,cardActions);
+    cardActions.append(addBtn, favBtn);
+    productInfo.append(productCategory, productTitle, productPrice, cardActions);
     productCard.append(productInfo);
     productsContainer.append(productCard);
   });
 }
+
+
 
 
 // ========================================
@@ -280,8 +291,12 @@ function renderCategories(productsArray) {
   // categorías únicas
   const todasLasCategorias = productsArray.map(producto => producto.category);
   const categoriasUnicas = [...new Set(todasLasCategorias)];
+
+  categoryFilter.innerHTML = '<option value="all">Todas las categorías</option>';
+
   // opciones y Añadir al select
   console.log(categoriasUnicas);
+
   categoriasUnicas.forEach(categoria => {
     const option = document.createElement("option");
     option.value = categoria;
@@ -317,37 +332,32 @@ PISTA:
 
 function filterProducts() {
 
-  const textoBusqueda = searchInput.value.toLowerCase();
-  const categoriaSeleccionada = categoryFilter.value;
-  const ordenSeleccionado = sortSelect.value;
+  const textoBusqueda = document.getElementById("searchInput").value.toLowerCase();
+  const categoriaSeleccionada = document.getElementById("categoryFilter").value;
+  const ordenSeleccionado = document.getElementById("sortSelect").value;
+
 
   // Buscar por nombre y filtrar por categoría
   filteredProducts = products.filter(producto => {
     const coincideNombre = producto.title.toLowerCase().includes(textoBusqueda);
-    const coincideCategoria = (categoriaSeleccionada === "todos") || (producto.category === categoriaSeleccionada);
+    
+    const coincideCategoria = (categoriaSeleccionada === "all") || (producto.category === categoriaSeleccionada);
+   
     return coincideNombre && coincideCategoria;
   });
 
-  // Ordenar
-  if (ordenSeleccionado === "precio-asc") {
-    filteredProducts.sort((a, b) => a.price - b.price);
-  }
-  else if (ordenSeleccionado === "precio-desc") {
-    filteredProducts.sort((a, b) => b.price - a.price);
-  }
-  else if (ordenSeleccionado === "az") {
-    filteredProducts.sort((a, b) => a.title.localeCompare(b.title));
-  }
-  else if (ordenSeleccionado === "za") {
-    filteredProducts.sort((a, b) => b.title.localeCompare(a.title));
-  }
+  // Ordenar 
 
-  // Volvemos a pintar los productos filtrados en el contenedor
-  renderProducts(filteredProducts);
+  if (ordenSeleccionado === "priceAsc") filteredProducts.sort((a, b) => a.price - b.price);
+  if (ordenSeleccionado === "priceDesc") filteredProducts.sort((a, b) => b.price - a.price);
+  if (ordenSeleccionado === "az") filteredProducts.sort((a, b) => a.title.localeCompare(b.title));
+  if (ordenSeleccionado === "za") filteredProducts.sort((a, b) => b.title.localeCompare(a.title));
 
+   // Volvemos a pintar los productos filtrados en el contenedor
+   renderProducts(filteredProducts);
 }
-
-
+  
+  
 // ========================================
 // EVENTOS FILTROS
 // ========================================
@@ -663,8 +673,8 @@ function init() {
 
   //fixme: cambiar a renderProducts
   getProducts();
-  setTimeout(() => renderProducts(products) , 10)
-  
+  //setTimeout(() => renderProducts(products), 10)
+
 
 
 }
