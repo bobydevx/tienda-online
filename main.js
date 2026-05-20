@@ -157,6 +157,8 @@ function getProducts() {
     then((response) => response.json()).
     then((data) => {
       products = data;
+      renderCategories(products);
+
       console.log(data);
     });
 }
@@ -229,14 +231,12 @@ PISTA:
 new Set()
 */
 
-console.log(124);
-
-
 function renderCategories(productsArray) {
   // categorías únicas
   const todasLasCategorias = productsArray.map(producto => producto.category);
   const categoriasUnicas = [...new Set(todasLasCategorias)];
   // opciones y Añadir al select
+  console.log(categoriasUnicas);
   categoriasUnicas.forEach(categoria => {
     const option = document.createElement("option");
     option.value = categoria;
