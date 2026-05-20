@@ -150,12 +150,15 @@ products.forEach(product => {
 });
 
 */
-
+const url = "https://fakestoreapi.com/products";
 
 function getProducts(){
-
-  // TODO
-
+  fetch(url).
+  then((response) => response.json()).
+  then((data) => {
+     products = data;
+     console.log(data);
+  });
 }
 
 
@@ -518,14 +521,14 @@ OBJETIVO:
 Abrir modal login.
 */
 
-accountBtn.addEventListener(
-  "click",
-  () => {
+// accountBtn.addEventListener(
+//   "click",
+//   () => {
 
-    // TODO
+//     // TODO
 
-  }
-);
+//   }
+// );
 
 
 /*
@@ -574,8 +577,11 @@ TAREAS:
 */
 
 function init(){
-
   // TODO
+
+  //fixme: cambiar a renderProducts
+  getProducts();
+  
 
 }
 
