@@ -385,7 +385,6 @@ TAREAS:
 */
 
 function addToCart(id) {
-function addToCart(id) {
 
   // TODO
 
@@ -442,7 +441,6 @@ JSON.stringify()
 */
 
 function saveCart() {
-function saveCart() {
 
   // TODO
 
@@ -457,7 +455,6 @@ PISTA:
 JSON.parse()
 */
 
-function loadCart() {
 function loadCart() {
 
   // TODO
@@ -575,8 +572,6 @@ TAREAS:
 */
 
 function checkSession() {
-function checkSession() {
-
   // TODO
 
 }
@@ -591,7 +586,6 @@ TAREAS:
 - Cerrar modal
 */
 
-function logout() {
 function logout() {
 
   // TODO
