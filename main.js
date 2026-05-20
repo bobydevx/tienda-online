@@ -152,13 +152,13 @@ products.forEach(product => {
 */
 const url = "https://fakestoreapi.com/products";
 
-function getProducts(){
+function getProducts() {
   fetch(url).
-  then((response) => response.json()).
-  then((data) => {
-     products = data;
-     console.log(data);
-  });
+    then((response) => response.json()).
+    then((data) => {
+      products = data;
+      console.log(data);
+    });
 }
 
 
@@ -205,10 +205,55 @@ productsContainer.appendChild(card);
 */
 
 
-function renderProducts(productsArray){
+function renderProducts(productsArray) {
+  productsArray.forEach(producto => {
+    const productCard = document.createElement("article");
+    productCard.classList.add("product-card");
 
-  // TODO
+    const productImageContainer = document.createElement("div");
+    productImageContainer.classList.add("product-image");
 
+    const productImage = document.createElement("img");
+    productImage.src = producto.image;
+    productImage.alt = `Producto ${producto.title}`;
+
+    const productInfo = document.createElement("div");
+    productInfo.classList.add("product-info");
+
+    const productCategory = document.createElement("product-category");
+    productCategory.classList.add("product-category");
+    productCategory.textContent = producto.category;
+
+    const productTitle = document.createElement("h3");
+    productTitle.classList.add("product-title");
+    productTitle.textContent = producto.title;
+
+    const productPrice = document.createElement("p");
+    productPrice.classList.add("product-price");
+    productPrice.textContent = producto.price;
+
+    const cardActions = document.createElement("div");
+    cardActions.classList.add("card-actions");
+
+    const addBtn = document.createElement("button");
+    addBtn.classList.add("add-btn");
+    addBtn.textContent = "Añadir";
+    addBtn.addEventListener('click', () => console.log("click"));
+
+    const favBtn = document.createElement("button");
+    favBtn.textContent = '🤍';
+    favBtn.classList.add("fav-btn")
+    favBtn.addEventListener('click', () => console.log("click"));
+
+
+    productImageContainer.append(productImage);
+    productCard.append(productImageContainer);
+
+    cardActions.append(addBtn,favBtn);
+    productInfo.append(productCategory,productTitle,productPrice,cardActions);
+    productCard.append(productInfo);
+    productsContainer.append(productCard);
+  });
 }
 
 
@@ -229,7 +274,7 @@ PISTA:
 new Set()
 */
 
-function renderCategories(productsArray){
+function renderCategories(productsArray) {
 
   // TODO
 
@@ -259,7 +304,7 @@ PISTA:
 - localeCompare()
 */
 
-function filterProducts(){
+function filterProducts() {
 
   // TODO
 
@@ -302,7 +347,7 @@ TAREAS:
 - Renderizar carrito
 */
 
-function addToCart(id){
+function addToCart(id) {
 
   // TODO
 
@@ -314,7 +359,7 @@ OBJETIVO:
 Eliminar producto del carrito.
 */
 
-function removeFromCart(id){
+function removeFromCart(id) {
 
   // TODO
 
@@ -332,7 +377,7 @@ MOSTRAR:
 - Total carrito
 */
 
-function renderCart(){
+function renderCart() {
 
   // TODO
 
@@ -358,7 +403,7 @@ PISTA:
 JSON.stringify()
 */
 
-function saveCart(){
+function saveCart() {
 
   // TODO
 
@@ -373,7 +418,7 @@ PISTA:
 JSON.parse()
 */
 
-function loadCart(){
+function loadCart() {
 
   // TODO
 
@@ -402,14 +447,14 @@ TAREAS:
 - Recuperar favoritos
 */
 
-function toggleFavorite(id){
+function toggleFavorite(id) {
 
   // TODO
 
 }
 
 
-function loadFavorites(){
+function loadFavorites() {
 
   // TODO
 
@@ -482,7 +527,7 @@ TAREAS:
 - Mostrar login si no existe
 */
 
-function checkSession(){
+function checkSession() {
 
   // TODO
 
@@ -498,7 +543,7 @@ TAREAS:
 - Cerrar modal
 */
 
-function logout(){
+function logout() {
 
   // TODO
 
@@ -576,12 +621,14 @@ TAREAS:
 - Comprobar sesión
 */
 
-function init(){
+function init() {
   // TODO
 
   //fixme: cambiar a renderProducts
   getProducts();
+  setTimeout(() => renderProducts(products) , 10)
   
+
 
 }
 
