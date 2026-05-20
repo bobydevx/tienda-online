@@ -152,13 +152,13 @@ products.forEach(product => {
 */
 const url = "https://fakestoreapi.com/products";
 
-function getProducts(){
+function getProducts() {
   fetch(url).
-  then((response) => response.json()).
-  then((data) => {
-     products = data;
-     console.log(data);
-  });
+    then((response) => response.json()).
+    then((data) => {
+      products = data;
+      console.log(data);
+    });
 }
 
 
@@ -205,7 +205,7 @@ productsContainer.appendChild(card);
 */
 
 
-function renderProducts(productsArray){
+function renderProducts(productsArray) {
 
   // TODO
 
@@ -229,9 +229,20 @@ PISTA:
 new Set()
 */
 
-function renderCategories(productsArray){
 
-  // TODO
+
+
+function renderCategories(productsArray) {
+  // categorías únicas
+  const todasLasCategorias = productsArray.map(producto => producto.category);
+  const categoriasUnicas = [...new Set(todasLasCategorias)];
+  // opciones y Añadir al select
+  categoriasUnicas.forEach(categoria => {
+    const option = document.createElement("option");
+    option.value = categoria;
+    option.textContent = categoria;
+    categoryFilter.appendChild(option);
+  });
 
 }
 
@@ -259,9 +270,35 @@ PISTA:
 - localeCompare()
 */
 
-function filterProducts(){
+function filterProducts() {
 
-  // TODO
+  const textoBusqueda = searchInput.value.toLowerCase();
+  const categoriaSeleccionada = categoryFilter.value;
+  const ordenSeleccionado = sortSelect.value;
+
+  // Buscar por nombre y filtrar por categoría
+  filteredProducts = products.filter(producto => {
+    const coincideNombre = producto.title.toLowerCase().includes(textoBusqueda);
+    const coincideCategoria = (categoriaSeleccionada === "todos") || (producto.category === categoriaSeleccionada);
+    return coincideNombre && coincideCategoria;
+  });
+
+  // Ordenar
+  if (ordenSeleccionado === "precio-asc") {
+    filteredProducts.sort((a, b) => a.price - b.price);
+  }
+  else if (ordenSeleccionado === "precio-desc") {
+    filteredProducts.sort((a, b) => b.price - a.price);
+  }
+  else if (ordenSeleccionado === "az") {
+    filteredProducts.sort((a, b) => a.title.localeCompare(b.title));
+  }
+  else if (ordenSeleccionado === "za") {
+    filteredProducts.sort((a, b) => b.title.localeCompare(a.title));
+  }
+
+  // Volvemos a pintar los productos filtrados en el contenedor
+  renderProducts(filteredProducts);
 
 }
 
@@ -302,7 +339,7 @@ TAREAS:
 - Renderizar carrito
 */
 
-function addToCart(id){
+function addToCart(id) {
 
   // TODO
 
@@ -314,7 +351,7 @@ OBJETIVO:
 Eliminar producto del carrito.
 */
 
-function removeFromCart(id){
+function removeFromCart(id) {
 
   // TODO
 
@@ -332,7 +369,7 @@ MOSTRAR:
 - Total carrito
 */
 
-function renderCart(){
+function renderCart() {
 
   // TODO
 
@@ -358,7 +395,7 @@ PISTA:
 JSON.stringify()
 */
 
-function saveCart(){
+function saveCart() {
 
   // TODO
 
@@ -373,7 +410,7 @@ PISTA:
 JSON.parse()
 */
 
-function loadCart(){
+function loadCart() {
 
   // TODO
 
@@ -402,14 +439,14 @@ TAREAS:
 - Recuperar favoritos
 */
 
-function toggleFavorite(id){
+function toggleFavorite(id) {
 
   // TODO
 
 }
 
 
-function loadFavorites(){
+function loadFavorites() {
 
   // TODO
 
@@ -482,7 +519,7 @@ TAREAS:
 - Mostrar login si no existe
 */
 
-function checkSession(){
+function checkSession() {
 
   // TODO
 
@@ -498,7 +535,7 @@ TAREAS:
 - Cerrar modal
 */
 
-function logout(){
+function logout() {
 
   // TODO
 
@@ -576,12 +613,12 @@ TAREAS:
 - Comprobar sesión
 */
 
-function init(){
+function init() {
   // TODO
 
   //fixme: cambiar a renderProducts
   getProducts();
-  
+
 
 }
 
