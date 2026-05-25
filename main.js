@@ -414,7 +414,7 @@ function addToCart(id) {
   localStorage.setItem("carrito", JSON.stringify(cart));
 
   // Calcular costo
-  const total = cart.reduce((total,item) => total + (item.cantidad *  item.producto.price),0).toFixed(2);
+  const total = cart.reduce((total, item) => total + (item.cantidad * item.producto.price), 0).toFixed(2);
 
   console.log(total);
   cartTotal.textContent = total;
@@ -499,7 +499,7 @@ function renderCart() {
     notProductsText.textContent = "Agrega un producto a tu lista de compra";
     cartContainer.append(notProductsText)
 
-    // Si el elemento global cartTotal existe en el HTML, lo ponemos a 0
+    //  cartTotal lo ponemos a 0
     if (cartTotal) cartTotal.textContent = "0.00€";
     return;
   }
@@ -508,6 +508,9 @@ function renderCart() {
   // TODO
   cart.map((item) => {
     const producto = item.producto;
+    // calculo del subtotal y suma carrito
+    const precioSubtotal = producto.price * item.cantidad;
+    totalAcumulado += precioSubtotal;
 
     const cartItem = document.createElement("div");
     cartItem.classList.add("cart-item");
@@ -541,7 +544,8 @@ function renderCart() {
 
     const cartItemPrice = document.createElement("p");
     cartItemPrice.classList.add("cart-item-price");
-    cartItemPrice.textContent = `${item.cantidad} x ${producto.price}`
+
+    cartItemPrice.textContent = `${item.cantidad} x ${producto.price}€ (Subtotal: ${precioSubtotal.toFixed(2)}€)`;
 
     const removeBtn = document.createElement("button");
     removeBtn.classList.add("remove-btn");
@@ -597,11 +601,9 @@ JSON.stringify()
 */
 
 function saveCart() {
-
-  // TODO
-
+  // Convierte el array 'cart' a texto JSON y lo guarda con la clave 'carrito'
+  localStorage.setItem("carrito", JSON.stringify(cart));
 }
-
 
 /*
 OBJETIVO:
@@ -612,8 +614,15 @@ JSON.parse()
 */
 
 function loadCart() {
-
   // TODO
+   const carritoGuardado = localStorage.getItem("carrito");
+  
+  if (carritoGuardado) {
+    // Convierte el texto JSON de vuelta a un array de objetos
+    cart = JSON.parse(carritoGuardado);
+    // Vuelve a pintar el carrito en la pantalla para que se vean los productos cargados
+    renderCart();
+  }
 
 }
 
