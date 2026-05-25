@@ -162,10 +162,8 @@ function getProducts() {
     then((data) => {
       products = data;
 
-      renderProducts(products);   // Dibuja los productos por primera vez
+      renderProducts(products);  
       renderCategories(products);
-
-      console.log(data);
     });
 }
 
@@ -396,6 +394,15 @@ TAREAS:
 - Renderizar carrito
 */
 
+let totalPriceCart = 0;
+
+function updateCart(){
+  // Calcular costo
+  totalPriceCart = cart.reduce((total,item) => total + (item.cantidad *  item.producto.price),0).toFixed(2);
+  // 
+  cartTotal.textContent = totalPriceCart;
+}
+
 function addToCart(id) {
   // Buscar producto por ID
   const producto = products.find((p) => p.id === id);
@@ -416,10 +423,9 @@ function addToCart(id) {
   // Calcular costo
   const total = cart.reduce((total, item) => total + (item.cantidad * item.producto.price), 0).toFixed(2);
 
-  console.log(total);
-  cartTotal.textContent = total;
   //Renderizar carrito
   renderCart();
+  updateCart();
 }
 
 
@@ -527,7 +533,7 @@ function renderCart() {
     quantityControls.classList.add("quantity-controls");
 
     const btnDecrement = document.createElement("button");
-    btnDecrement.classList.add("btn-qty"); // Clase opcional para diseño
+    btnDecrement.classList.add("btn-qty");
     btnDecrement.textContent = "-";
     btnDecrement.addEventListener("click", () => updateQuantity(producto.id, "decrement"));
 
@@ -536,7 +542,7 @@ function renderCart() {
     quantitySpan.textContent = ` ${item.cantidad} `;
 
     const btnIncrement = document.createElement("button");
-    btnIncrement.classList.add("btn-qty"); // Clase opcional para diseño
+    btnIncrement.classList.add("btn-qty");
     btnIncrement.textContent = "+";
     btnIncrement.addEventListener("click", () => updateQuantity(producto.id, "increment"));
 
@@ -559,26 +565,23 @@ function renderCart() {
     cartContainer.append(cartItem);
   });
 
-  // Sección final para el total y el botón de vaciar
-  if (cartTotal) {
-    cartTotal.textContent = `${totalAcumulado.toFixed(2)}€`;
-  }
+  // Actualizar carrito
+  updateCart();
+
   // Creamos la sección final del carrito para el botón "Vaciar Carrito"
   const cartActionsContainer = document.createElement("div");
   cartActionsContainer.classList.add("cart-menu-actions");
 
-  const totalText = document.createElement("h4");
-  totalText.textContent = `Total Carrito: ${totalAcumulado.toFixed(2)}€`;
+
 
   const clearCartBtn = document.createElement("button");
   clearCartBtn.id = "clear-cart-btn";
   clearCartBtn.textContent = "Vaciar Carrito";
   clearCartBtn.addEventListener("click", clearCart);
 
-  cartActionsContainer.append(totalText, clearCartBtn);
+  cartActionsContainer.append(clearCartBtn);
   cartContainer.append(cartActionsContainer);
 }
-renderCart();
 
 
 // ========================================
