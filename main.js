@@ -510,13 +510,11 @@ function renderCart() {
     return;
   }
 
-  let totalAcumulado = 0;
   // TODO
   cart.map((item) => {
     const producto = item.producto;
     // calculo del subtotal y suma carrito
     const precioSubtotal = producto.price * item.cantidad;
-    totalAcumulado += precioSubtotal;
 
     const cartItem = document.createElement("div");
     cartItem.classList.add("cart-item");
@@ -551,7 +549,7 @@ function renderCart() {
     const cartItemPrice = document.createElement("p");
     cartItemPrice.classList.add("cart-item-price");
 
-    cartItemPrice.textContent = `${item.cantidad} x ${producto.price}€ (Subtotal: ${precioSubtotal.toFixed(2)}€)`;
+    cartItemPrice.textContent = `${item.cantidad} x ${producto.price}€ (${precioSubtotal.toFixed(2)}€)`;
 
     const removeBtn = document.createElement("button");
     removeBtn.classList.add("remove-btn");
@@ -661,9 +659,8 @@ function toggleFavorite(id) {
   } else {
     favorites = favorites.filter((favorito) => favorito.id != id);
   }
-  // TODO
+
   localStorage.setItem('favoritos', JSON.stringify(favorites));
-  console.log(localStorage.getItem('favoritos'));
 }
 
 
@@ -834,16 +831,9 @@ TAREAS:
 */
 
 function init() {
-  // TODO
-  const carritoGuardado = localStorage.getItem("carrito");
-  if (carritoGuardado) {
-    cart = JSON.parse(carritoGuardado);
-  }
-  //fixme: cambiar a renderProducts
   getProducts();
+  loadCart();
   renderCart();
-  //setTimeout(() => renderProducts(products), 10)
-
 }
 
 
