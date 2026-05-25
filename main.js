@@ -249,7 +249,8 @@ function renderProducts(productsArray) {
     const addBtn = document.createElement("button");
     addBtn.classList.add("add-btn");
     addBtn.textContent = "Añadir";
-    addBtn.addEventListener('click', () => console.log("click"));
+
+    addBtn.addEventListener('click', () => addToCart(producto.id));
 
     const favBtn = document.createElement("button");
     favBtn.textContent = '🤍';
@@ -395,9 +396,24 @@ TAREAS:
 */
 
 function addToCart(id) {
+  // Buscar producto por ID
+  const producto = products.find((p) => p.id === id);
 
-  // TODO
+  const productoEnCarrito = cart.find((p) => p.producto.id === id);
 
+  if(!productoEnCarrito) {
+    // Añadir al array carrito
+    cart.push({producto: producto , cantidad: 1});
+  } else {
+    // Incrementar cantidad si ya existe
+    productoEnCarrito.cantidad++;
+  }
+
+  //Guardar carrito
+  localStorage.setItem("carrito",JSON.stringify(cart));
+
+  //Renderizar carrito
+  renderCart();
 }
 
 
@@ -425,8 +441,40 @@ MOSTRAR:
 */
 
 function renderCart() {
+  cartContainer.innerHTML = '';
 
+  if (cart.length < 1){
+    const notProductsText = document.createElement("p");
+    notProductsText.textContent = "Agrega un producto a tu lista de compra";
+    cartContainer.append(notProductsText)
+  }
   // TODO
+  cart.map((item) => {
+    const producto = item.producto;
+
+    const cartItem = document.createElement("div");
+    cartItem.classList.add("cart-item");
+
+    const cardItemInfo = document.createElement("div");
+    cardItemInfo.classList.add("cart-item-info");
+
+    const cartItemTitle = document.createElement("p");
+    cartItemTitle.classList.add("cart-item-title");
+    cartItemTitle.textContent = producto.title;
+
+    const cartItemPrice = document.createElement("p");
+    cartItemPrice.classList.add("cart-item-price");
+    cartItemPrice.textContent = `${item.cantidad} x ${producto.price}`
+
+    const removeBtn = document.createElement("button");
+    removeBtn.classList.add("remove-btn");
+    removeBtn.textContent = 'X';
+
+    
+    cardItemInfo.append(cartItemTitle,cartItemPrice);
+    cartItem.append(cardItemInfo,removeBtn);
+    cartContainer.append(cartItem);
+  });
 
 }
 
@@ -680,6 +728,7 @@ function init() {
 
   //fixme: cambiar a renderProducts
   getProducts();
+  renderCart();
   //setTimeout(() => renderProducts(products), 10)
 
 
