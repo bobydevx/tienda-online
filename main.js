@@ -164,7 +164,7 @@ function getProducts() {
 
       renderProducts(products);   // Dibuja los productos por primera vez
       renderCategories(products);
-      
+
       console.log(data);
     });
 }
@@ -241,7 +241,8 @@ function renderProducts(productsArray) {
 
     const productPrice = document.createElement("p");
     productPrice.classList.add("product-price");
-    productPrice.textContent = producto.price;
+    //productPrice.textContent = producto.price;
+    productPrice.textContent = `${producto.price}€`; // AÑADIR MONEDA A LOS ARTICULOS
 
     const cardActions = document.createElement("div");
     cardActions.classList.add("card-actions");
@@ -341,9 +342,9 @@ function filterProducts() {
   // Buscar por nombre y filtrar por categoría
   filteredProducts = products.filter(producto => {
     const coincideNombre = producto.title.toLowerCase().includes(textoBusqueda);
-    
+
     const coincideCategoria = (categoriaSeleccionada === "all") || (producto.category === categoriaSeleccionada);
-   
+
     return coincideNombre && coincideCategoria;
   });
 
@@ -354,11 +355,11 @@ function filterProducts() {
   if (ordenSeleccionado === "az") filteredProducts.sort((a, b) => a.title.localeCompare(b.title));
   if (ordenSeleccionado === "za") filteredProducts.sort((a, b) => b.title.localeCompare(a.title));
 
-   // Volvemos a pintar los productos filtrados en el contenedor
-   renderProducts(filteredProducts);
+  // Volvemos a pintar los productos filtrados en el contenedor
+  renderProducts(filteredProducts);
 }
-  
-  
+
+
 // ========================================
 // EVENTOS FILTROS
 // ========================================
@@ -401,16 +402,16 @@ function addToCart(id) {
 
   const productoEnCarrito = cart.find((p) => p.producto.id === id);
 
-  if(!productoEnCarrito) {
+  if (!productoEnCarrito) {
     // Añadir al array carrito
-    cart.push({producto: producto , cantidad: 1});
+    cart.push({ producto: producto, cantidad: 1 });
   } else {
     // Incrementar cantidad si ya existe
     productoEnCarrito.cantidad++;
   }
 
   //Guardar carrito
-  localStorage.setItem("carrito",JSON.stringify(cart));
+  localStorage.setItem("carrito", JSON.stringify(cart));
 
   // Calcular costo
   const total = cart.reduce((total,item) => total + (item.cantidad *  item.producto.price),0).toFixed(2);
@@ -425,13 +426,58 @@ function addToCart(id) {
 /*
 OBJETIVO:
 Eliminar producto del carrito.
+
+/*
+OBJETIVO:
+Eliminar producto del carrito por completo.
 */
-
 function removeFromCart(id) {
+  // Filtramos el array 'cart' comparando con el id dentro de 'item.producto'
+  cart = cart.filter(item => item.producto.id !== id);
 
-  // TODO
-
+  // Guardamos en LocalStorage para que persista y volvemos a pintar
+  localStorage.setItem("carrito", JSON.stringify(cart));
+  renderCart();
 }
+
+/*
+OBJETIVO:
+Vaciar todo el carrito de golpe.
+*/
+function clearCart() {
+  cart = [];
+  localStorage.setItem("carrito", JSON.stringify(cart));
+  renderCart();
+}
+
+/*
+OBJETIVO:
+Incrementar o decrementar la cantidad de un artículo.
+*/
+function updateQuantity(id, action) {
+  const itemEnCarrito = cart.find(item => item.producto.id === id);
+
+  if (!itemEnCarrito) return;
+
+  if (action === "increment") {
+    itemEnCarrito.cantidad++;
+  } else if (action === "decrement") {
+    itemEnCarrito.cantidad--;
+
+    // Si la cantidad baja de 1, eliminamos el artículo por completo
+    if (itemEnCarrito.cantidad < 1) {
+      removeFromCart(id);
+      return; // Salimos de la función para evitar doble renderizado
+    }
+  }
+
+  // Guardamos el estado y actualizamos la interfaz
+  localStorage.setItem("carrito", JSON.stringify(cart));
+  renderCart();
+}
+
+
+
 
 
 /*
@@ -448,11 +494,17 @@ MOSTRAR:
 function renderCart() {
   cartContainer.innerHTML = '';
 
-  if (cart.length < 1){
+  if (cart.length < 1) {
     const notProductsText = document.createElement("p");
     notProductsText.textContent = "Agrega un producto a tu lista de compra";
     cartContainer.append(notProductsText)
+
+    // Si el elemento global cartTotal existe en el HTML, lo ponemos a 0
+    if (cartTotal) cartTotal.textContent = "0.00€";
+    return;
   }
+
+  let totalAcumulado = 0;
   // TODO
   cart.map((item) => {
     const producto = item.producto;
@@ -467,6 +519,26 @@ function renderCart() {
     cartItemTitle.classList.add("cart-item-title");
     cartItemTitle.textContent = producto.title;
 
+    // Contenedor para los controles de cantidad (+ / -)
+    const quantityControls = document.createElement("div");
+    quantityControls.classList.add("quantity-controls");
+
+    const btnDecrement = document.createElement("button");
+    btnDecrement.classList.add("btn-qty"); // Clase opcional para diseño
+    btnDecrement.textContent = "-";
+    btnDecrement.addEventListener("click", () => updateQuantity(producto.id, "decrement"));
+
+    const quantitySpan = document.createElement("span");
+    quantitySpan.classList.add("qty-number");
+    quantitySpan.textContent = ` ${item.cantidad} `;
+
+    const btnIncrement = document.createElement("button");
+    btnIncrement.classList.add("btn-qty"); // Clase opcional para diseño
+    btnIncrement.textContent = "+";
+    btnIncrement.addEventListener("click", () => updateQuantity(producto.id, "increment"));
+
+    quantityControls.append(btnDecrement, quantitySpan, btnIncrement);
+
     const cartItemPrice = document.createElement("p");
     cartItemPrice.classList.add("cart-item-price");
     cartItemPrice.textContent = `${item.cantidad} x ${producto.price}`
@@ -475,13 +547,34 @@ function renderCart() {
     removeBtn.classList.add("remove-btn");
     removeBtn.textContent = 'X';
 
-    
-    cardItemInfo.append(cartItemTitle,cartItemPrice);
-    cartItem.append(cardItemInfo,removeBtn);
+    // Conectamos función de eliminar
+    removeBtn.addEventListener("click", () => removeFromCart(producto.id));
+
+    cardItemInfo.append(cartItemTitle, quantityControls, cartItemPrice);
+    cartItem.append(cardItemInfo, removeBtn);
     cartContainer.append(cartItem);
   });
 
+  // Sección final para el total y el botón de vaciar
+  if (cartTotal) {
+    cartTotal.textContent = `${totalAcumulado.toFixed(2)}€`;
+  }
+  // Creamos la sección final del carrito para el botón "Vaciar Carrito"
+  const cartActionsContainer = document.createElement("div");
+  cartActionsContainer.classList.add("cart-menu-actions");
+
+  const totalText = document.createElement("h4");
+  totalText.textContent = `Total Carrito: ${totalAcumulado.toFixed(2)}€`;
+
+  const clearCartBtn = document.createElement("button");
+  clearCartBtn.id = "clear-cart-btn";
+  clearCartBtn.textContent = "Vaciar Carrito";
+  clearCartBtn.addEventListener("click", clearCart);
+
+  cartActionsContainer.append(totalText, clearCartBtn);
+  cartContainer.append(cartActionsContainer);
 }
+renderCart();
 
 
 // ========================================
@@ -551,19 +644,19 @@ function toggleFavorite(id) {
   console.log(id);
   const producto = products.find((producto) => producto.id === id);
 
-  if(!favorites.includes(producto)) {
-      favorites.push(producto);
+  if (!favorites.includes(producto)) {
+    favorites.push(producto);
   } else {
     favorites = favorites.filter((favorito) => favorito.id != id);
   }
   // TODO
-  localStorage.setItem('favoritos',JSON.stringify(favorites));
+  localStorage.setItem('favoritos', JSON.stringify(favorites));
   console.log(localStorage.getItem('favoritos'));
 }
 
 
 function loadFavorites() {
-  if(localStorage.getItem('favoritos')){
+  if (localStorage.getItem('favoritos')) {
     favorites = localStorage.getItem('favoritos');
   }
 }
@@ -730,13 +823,14 @@ TAREAS:
 
 function init() {
   // TODO
-
+  const carritoGuardado = localStorage.getItem("carrito");
+  if (carritoGuardado) {
+    cart = JSON.parse(carritoGuardado);
+  }
   //fixme: cambiar a renderProducts
   getProducts();
   renderCart();
   //setTimeout(() => renderProducts(products), 10)
-
-
 
 }
 

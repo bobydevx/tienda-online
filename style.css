@@ -819,3 +819,33 @@ RESPONSIVE
   }
 
 }
+
+/* Contenedor de los botones + y - */
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+/* Aspecto de los botones + y - */
+.quantity-controls button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.quantity-controls button:hover {
+  background-color: #e0e0e0;
+}
+
+/* El número de la cantidad */
+.qty-number {
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
