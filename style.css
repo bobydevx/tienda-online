@@ -594,6 +594,22 @@ CARRITO
 
 }
 
+#clear-cart-btn{
+  padding: 16px 24px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  background-color: #cc0b0b;
+  width: 100%;
+  margin: 12px 0;
+  cursor: pointer;
+}
+
+#clear-cart-btn:hover {
+  background-color: #aa0808;
+}
+
+
 
 .cart-total{
 
@@ -825,14 +841,19 @@ RESPONSIVE
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 8px 0;
+  margin: 12px 0;
+
+  border: 1px solid rgb(179, 177, 177);
+  width: fit-content;
+  padding: 2px;
+  border-radius: 10px;
 }
 
 /* Aspecto de los botones + y - */
 .quantity-controls button {
   background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  padding: 4px 10px;
+  border: none;
+  padding: 8px 10px;
   cursor: pointer;
   font-weight: bold;
   font-size: 14px;

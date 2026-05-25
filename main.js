@@ -524,7 +524,7 @@ function renderCart() {
     quantityControls.classList.add("quantity-controls");
 
     const btnDecrement = document.createElement("button");
-    btnDecrement.classList.add("btn-qty"); // Clase opcional para diseño
+    btnDecrement.classList.add("btn-qty");
     btnDecrement.textContent = "-";
     btnDecrement.addEventListener("click", () => updateQuantity(producto.id, "decrement"));
 
@@ -533,7 +533,7 @@ function renderCart() {
     quantitySpan.textContent = ` ${item.cantidad} `;
 
     const btnIncrement = document.createElement("button");
-    btnIncrement.classList.add("btn-qty"); // Clase opcional para diseño
+    btnIncrement.classList.add("btn-qty");
     btnIncrement.textContent = "+";
     btnIncrement.addEventListener("click", () => updateQuantity(producto.id, "increment"));
 
@@ -563,15 +563,14 @@ function renderCart() {
   const cartActionsContainer = document.createElement("div");
   cartActionsContainer.classList.add("cart-menu-actions");
 
-  const totalText = document.createElement("h4");
-  totalText.textContent = `Total Carrito: ${totalAcumulado.toFixed(2)}€`;
+
 
   const clearCartBtn = document.createElement("button");
   clearCartBtn.id = "clear-cart-btn";
   clearCartBtn.textContent = "Vaciar Carrito";
   clearCartBtn.addEventListener("click", clearCart);
 
-  cartActionsContainer.append(totalText, clearCartBtn);
+  cartActionsContainer.append(clearCartBtn);
   cartContainer.append(cartActionsContainer);
 }
 renderCart();
