@@ -162,10 +162,8 @@ function getProducts() {
     then((data) => {
       products = data;
 
-      renderProducts(products);   // Dibuja los productos por primera vez
+      renderProducts(products);  
       renderCategories(products);
-
-      console.log(data);
     });
 }
 
@@ -396,6 +394,15 @@ TAREAS:
 - Renderizar carrito
 */
 
+let totalPriceCart = 0;
+
+function updateCart(){
+  // Calcular costo
+  totalPriceCart = cart.reduce((total,item) => total + (item.cantidad *  item.producto.price),0).toFixed(2);
+  // 
+  cartTotal.textContent = totalPriceCart;
+}
+
 function addToCart(id) {
   // Buscar producto por ID
   const producto = products.find((p) => p.id === id);
@@ -413,13 +420,10 @@ function addToCart(id) {
   //Guardar carrito
   localStorage.setItem("carrito", JSON.stringify(cart));
 
-  // Calcular costo
-  const total = cart.reduce((total,item) => total + (item.cantidad *  item.producto.price),0).toFixed(2);
 
-  console.log(total);
-  cartTotal.textContent = total;
   //Renderizar carrito
   renderCart();
+  updateCart();
 }
 
 
@@ -555,10 +559,9 @@ function renderCart() {
     cartContainer.append(cartItem);
   });
 
-  // Sección final para el total y el botón de vaciar
-  if (cartTotal) {
-    cartTotal.textContent = `${totalAcumulado.toFixed(2)}€`;
-  }
+  // Actualizar carrito
+  updateCart();
+
   // Creamos la sección final del carrito para el botón "Vaciar Carrito"
   const cartActionsContainer = document.createElement("div");
   cartActionsContainer.classList.add("cart-menu-actions");
@@ -573,7 +576,6 @@ function renderCart() {
   cartActionsContainer.append(clearCartBtn);
   cartContainer.append(cartActionsContainer);
 }
-renderCart();
 
 
 // ========================================
