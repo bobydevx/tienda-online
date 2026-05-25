@@ -412,6 +412,11 @@ function addToCart(id) {
   //Guardar carrito
   localStorage.setItem("carrito",JSON.stringify(cart));
 
+  // Calcular costo
+  const total = cart.reduce((total,item) => total + (item.cantidad *  item.producto.price),0).toFixed(2);
+
+  console.log(total);
+  cartTotal.textContent = total;
   //Renderizar carrito
   renderCart();
 }
