@@ -894,7 +894,9 @@ loginModal.addEventListener(
   (e) => {
 
     // TODO
-
+    if(e.target === loginModal){
+      cerrarModal();
+    }
   }
 );
 
