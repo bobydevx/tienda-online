@@ -56,7 +56,7 @@ const loginModal =
 
 // Botón abrir login
 const accountBtn =
-  document.querySelector(".account-btn");
+  document.querySelector(".cart-btn");
 
 // Botón cerrar login
 const closeLogin =
@@ -162,7 +162,7 @@ function getProducts() {
     then((data) => {
       products = data;
 
-      renderProducts(products);  
+      renderProducts(products);
       renderCategories(products);
     });
 }
@@ -396,11 +396,11 @@ TAREAS:
 
 let totalPriceCart = 0;
 
-function updateCart(){
+function updateCart() {
   // Calcular costo
-  totalPriceCart = cart.reduce((total,item) => total + (item.cantidad *  item.producto.price),0).toFixed(2);
+  totalPriceCart = cart.reduce((total, item) => total + (item.cantidad * item.producto.price), 0).toFixed(2);
   // 
-  cartTotal.textContent = totalPriceCart;
+  cartTotal.textContent = `${totalPriceCart}€`;
 }
 
 function addToCart(id) {
@@ -616,14 +616,15 @@ JSON.parse()
 
 function loadCart() {
   // TODO
-   const carritoGuardado = localStorage.getItem("carrito");
-  
+  const carritoGuardado = localStorage.getItem("carrito");
+
   if (carritoGuardado) {
     // Convierte el texto JSON de vuelta a un array de objetos
     cart = JSON.parse(carritoGuardado);
     // Vuelve a pintar el carrito en la pantalla para que se vean los productos cargados
     renderCart();
   }
+  cart.forEach(item => console.log(item.producto.title, "- Cantidad:", item.cantidad));
 
 }
 
@@ -675,6 +676,29 @@ function loadFavorites() {
 // FASE 5 - LOGIN
 // ========================================
 
+const btnMiCuenta = document.querySelector(".cart-btn");
+const loginModalElement = document.getElementById("loginModal");
+const btnCloseLogin = document.getElementById("closeLogin");
+
+
+// Abrir modal al pulsar "Mi cuenta"
+if (btnMiCuenta) {
+  btnMiCuenta.addEventListener("click", () => {
+    if (loginModalElement) {
+      loginModalElement.classList.remove("hidden");
+    }
+  });
+}
+
+// Cerrar modal al pulsar la equis (✕)
+if (btnCloseLogin) {
+  btnCloseLogin.addEventListener("click", () => {
+    if (loginModalElement) {
+      loginModalElement.classList.add("hidden");
+    }
+  });
+}
+
 /*
 ========================================
 EXTRA
@@ -711,11 +735,44 @@ loginForm.addEventListener(
 
     e.preventDefault();
 
-    // TODO
+    // Capturar formulario
+    const usernameValue = document.getElementById("username").value;
+    const passwordValue = document.getElementById("password").value;
+
+    // 2. enviar datos
+    fetch("https://fakestoreapi.com/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: usernameValue,
+        password: passwordValue,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Credenciales inválidas");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // 3. Guardar token
+        if (data.token) {
+          sessionStorage.setItem("token", data.token);
+
+          // 4 Cerrar modal
+          if (loginModalElement) {
+            loginModalElement.classList.add("hidden");
+          }
+          alert("¡Login correcto!");
+        }
+      })
+      .catch((error) => {
+        console.error("Error en el login:", error);
+        alert("Usuario o contraseña incorrectos.");
+      });
 
   }
 );
-
 
 // ========================================
 // FASE 6 - SESIÓN

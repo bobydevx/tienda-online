@@ -84,6 +84,10 @@ nav{
 
   align-items:center;
 
+
+  flex-wrap: nowrap;       /* Fuerza a que el botón se quede siempre a la derecha */
+  gap: 20px;     
+
 }
 
 
