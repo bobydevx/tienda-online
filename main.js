@@ -55,7 +55,7 @@ const loginModal =
   document.getElementById("loginModal");
 
 // Botón abrir login
-const accountBtn =
+const cartBtn =
   document.querySelector(".cart-btn");
 
 // Botón cerrar login
@@ -626,8 +626,6 @@ function loadCart() {
     // Vuelve a pintar el carrito en la pantalla para que se vean los productos cargados
     renderCart();
   }
-  cart.forEach(item => console.log(item.producto.title, "- Cantidad:", item.cantidad));
-
 }
 
 
@@ -702,25 +700,20 @@ function pintarFavoritos() {
 // FASE 5 - LOGIN
 // ========================================
 
-const btnMiCuenta = document.querySelector(".cart-btn");
-const loginModalElement = document.getElementById("loginModal");
-const btnCloseLogin = document.getElementById("closeLogin");
-
-
 // Abrir modal al pulsar "Mi cuenta"
-if (btnMiCuenta) {
+if (cartBtn) {
   btnMiCuenta.addEventListener("click", () => {
-    if (loginModalElement) {
-      loginModalElement.classList.remove("hidden");
+    if (loginModal) {
+      loginModal.classList.remove("hidden");
     }
   });
 }
 
 // Cerrar modal al pulsar la equis (✕)
-if (btnCloseLogin) {
-  btnCloseLogin.addEventListener("click", () => {
-    if (loginModalElement) {
-      loginModalElement.classList.add("hidden");
+if (closeLogin) {
+  closeLogin.addEventListener("click", () => {
+    if (loginModal) {
+      loginModal.classList.add("hidden");
     }
   });
 }
