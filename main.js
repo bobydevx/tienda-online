@@ -218,6 +218,7 @@ function renderProducts(productsArray) {
   productsArray.forEach(producto => {
     const productCard = document.createElement("article");
     productCard.classList.add("product-card");
+    productCard.id = `product-${producto.id}`;
 
     const productImageContainer = document.createElement("div");
     productImageContainer.classList.add("product-image");
@@ -253,7 +254,8 @@ function renderProducts(productsArray) {
 
     const favBtn = document.createElement("button");
     favBtn.textContent = '🤍';
-    favBtn.classList.add("fav-btn")
+    favBtn.classList.add("fav-btn");
+
     favBtn.addEventListener('click', () => toggleFavorite(producto.id));
 
 
@@ -655,22 +657,46 @@ function toggleFavorite(id) {
   console.log(id);
   const producto = products.find((producto) => producto.id === id);
 
-  if (!favorites.includes(producto)) {
+  const estaFavorito = favorites.find((f) => f.id === id)
+
+  if (!estaFavorito) {
     favorites.push(producto);
   } else {
-    favorites = favorites.filter((favorito) => favorito.id != id);
+    favorites = favorites.filter((favorito) => favorito.id !== id);
   }
 
   localStorage.setItem('favoritos', JSON.stringify(favorites));
+  pintarFavoritos();
 }
-
 
 function loadFavorites() {
   if (localStorage.getItem('favoritos')) {
-    favorites = localStorage.getItem('favoritos');
+    favorites = JSON.parse(localStorage.getItem('favoritos'));
   }
+
+  pintarFavoritos();
+
 }
 
+// EXTRA: PINTAR FAVORITOS
+
+function pintarFavoritos() {
+  let favoritesIds = favorites.map((f) => f.id);
+
+  Array.from(productsContainer.children).forEach((card) => {
+    const idCard = parseInt(card.id.split("-", 10)[1]);
+    const favButton = card.querySelector(".fav-btn");
+
+    let estaFavorito = favoritesIds.find((id) => id === idCard);
+
+    if (estaFavorito) {
+      favButton.classList.add("haveFavorite");
+    } else {
+      favButton.classList.remove("haveFavorite");
+    }
+
+  });
+}
 
 // ========================================
 // FASE 5 - LOGIN
@@ -891,6 +917,8 @@ function init() {
   getProducts();
   loadCart();
   renderCart();
+  setTimeout(() => loadFavorites(), 100);
+  // loadFavorites();
 }
 
 

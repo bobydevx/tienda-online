@@ -493,6 +493,10 @@ BOTONES CARD
   font-size:18px;
 
   transition:0.3s;
+}
+
+.fav-btn.haveFavorite {
+  background-color: #ee9090;
 
 }
 
