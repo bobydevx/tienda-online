@@ -56,7 +56,7 @@ const loginModal =
 
 // Botón abrir login
 const cartBtn =
-  document.querySelector(".cart-btn");
+  document.querySelector("#cart-btn");
 
 // Botón cerrar login
 const closeLogin =
@@ -65,10 +65,6 @@ const closeLogin =
 // Formulario login
 const loginForm =
   document.getElementById("loginForm");
-
-// eventos 
-
-
 
 
 // ========================================
@@ -702,7 +698,7 @@ function pintarFavoritos() {
 
 // Abrir modal al pulsar "Mi cuenta"
 if (cartBtn) {
-  btnMiCuenta.addEventListener("click", () => {
+  cartBtn.addEventListener("click", () => {
     if (loginModal) {
       loginModal.classList.remove("hidden");
     }
@@ -779,10 +775,11 @@ loginForm.addEventListener(
           sessionStorage.setItem("token", data.token);
 
           // 4 Cerrar modal
-          if (loginModalElement) {
-            loginModalElement.classList.add("hidden");
+          if (loginModal) {
+            loginModal.classList.add("hidden");
           }
           alert("¡Login correcto!");
+          checkSession();
         }
       })
       .catch((error) => {
@@ -813,9 +810,22 @@ TAREAS:
 - Mostrar login si no existe
 */
 
-function checkSession() {
-  // TODO
 
+function checkSession() {
+  console.log("comprobando")
+  // TODO
+  const isLogin = sessionStorage.getItem('token');
+
+  if (isLogin) {
+    // Ocultar boton de login
+    cartBtn.setAttribute("hidden", true);
+    logoutBtn.removeAttribute("hidden");
+  } else {
+    // Mostrar login si no existe
+    cartBtn.removeAttribute("hidden");
+    logoutBtn.setAttribute("hidden", true);
+
+  }
 }
 
 
@@ -828,10 +838,15 @@ TAREAS:
 - Cerrar modal
 */
 
+const logoutBtn = document.getElementById("logout-btn");
+logoutBtn.addEventListener("click", logout);
+
+
 function logout() {
-
   // TODO
-
+  sessionStorage.removeItem('token');
+  cerrarModal();
+  checkSession();
 }
 
 
@@ -845,20 +860,20 @@ EXTRA
 ========================================
 */
 
+function cerrarModal() {
+  loginModal.classList.add("hidden");
+}
+
+function abrirModal() {
+  loginModal.classList.remove("hidden");
+}
 
 /*
 OBJETIVO:
 Abrir modal login.
 */
 
-// accountBtn.addEventListener(
-//   "click",
-//   () => {
-
-//     // TODO
-
-//   }
-// );
+cartBtn.addEventListener("click", abrirModal);
 
 
 /*
@@ -866,14 +881,7 @@ OBJETIVO:
 Cerrar modal login.
 */
 
-closeLogin.addEventListener(
-  "click",
-  () => {
-
-    // TODO
-
-  }
-);
+closeLogin.addEventListener("click", cerrarModal);
 
 
 /*
@@ -907,11 +915,17 @@ TAREAS:
 */
 
 function init() {
+  // Obtener productos
   getProducts();
+  // Cargar carrito & Renderizado
   loadCart();
   renderCart();
+  // Cargar favoritos
   setTimeout(() => loadFavorites(), 100);
   // loadFavorites();
+
+  // 
+  checkSession();
 }
 
 

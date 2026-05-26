@@ -118,7 +118,7 @@ nav{
 }
 
 
-.cart-btn{
+.nav-btn{
 
   border:none;
 
@@ -139,7 +139,7 @@ nav{
 }
 
 
-.cart-btn:hover{
+.nav-btn:hover{
 
   background:var(--primary-hover);
 
