@@ -5,10 +5,7 @@
 
   <meta charset="UTF-8">
 
-  <meta 
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Mini Ecommerce</title>
 
@@ -16,20 +13,13 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
 
-  <link 
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  >
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link 
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- CSS -->
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
 
 </head>
 
@@ -67,12 +57,12 @@
 
         </button>
 
-        <button id="login-btn" class="nav-btn"> 
+        <button id="login-btn" class="nav-btn">
           👤
         </button>
 
         <button id="logout-btn" class="nav-btn">
-            Cerrar Sesión
+          Cerrar Sesión
         </button>
 
       </div>
@@ -128,11 +118,7 @@
       Buscador productos
       -->
 
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Buscar productos..."
-      >
+      <input type="text" id="searchInput" placeholder="Buscar productos...">
 
 
       <!-- TODO:
@@ -206,10 +192,7 @@
     PRODUCTOS
     ========================================= -->
 
-    <section
-      class="products-grid"
-      id="productsContainer"
-    >
+    <section class="products-grid" id="productsContainer">
     </section>
 
 
@@ -262,7 +245,7 @@
       Vaciar carrito / checkout
       -->
 
-      <button class="checkout-btn">
+      <button id="finalizar-btn" class="checkout-btn">
 
         Finalizar compra
 
@@ -278,19 +261,13 @@
   MODAL LOGIN
   ========================================= -->
 
-  <div 
-    class="login-modal hidden"
-    id="loginModal"
-  >
+  <div class="login-modal hidden" id="loginModal">
 
     <div class="login-box">
 
       <!-- BOTÓN CERRAR -->
 
-      <button
-        class="close-login"
-        id="closeLogin"
-      >
+      <button class="close-login" id="closeLogin">
 
         ✕
 
@@ -317,19 +294,9 @@
 
       <form id="loginForm">
 
-        <input
-          type="text"
-          id="username"
-          placeholder="Usuario"
-          required
-        >
+        <input type="text" id="username" placeholder="Usuario" required>
 
-        <input
-          type="password"
-          id="password"
-          placeholder="Contraseña"
-          required
-        >
+        <input type="password" id="password" placeholder="Contraseña" required>
 
         <button type="submit">
 
@@ -363,7 +330,8 @@
 
   <!-- JAVASCRIPT -->
 
-  <script src="main.js"></script>
+  <script src="js/main.js"></script>
 
 </body>
+
 </html>
