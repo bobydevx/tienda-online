@@ -30,14 +30,6 @@ FASES:
 const productsContainer =
   document.getElementById("productsContainer");
 
-// Contenedor carrito
-const cartContainer =
-  document.getElementById("cartContainer");
-
-// Total carrito
-const cartTotal =
-  document.getElementById("cartTotal");
-
 // Buscador
 const searchInput =
   document.getElementById("searchInput");
@@ -50,28 +42,8 @@ const categoryFilter =
 const sortSelect =
   document.getElementById("sortSelect");
 
-// Modal login
-const loginModal =
-  document.getElementById("loginModal");
 
-// Botón abrir login
-const loginBtn =
-  document.querySelector("#login-btn");
 
-// Botón cerrar login
-const closeLogin =
-  document.getElementById("closeLogin");
-
-// Formulario login
-const loginForm =
-  document.getElementById("loginForm");
-
-// Botón Mi cuenta
-const accountBtn = document.getElementById("account-btn");
-
-// Boton Finalizar Compra
-const finalizarCompraBtn = document.getElementById("finalizar-btn");
-finalizarCompraBtn.addEventListener("click",finalizarCompra);
 
 // ========================================
 // VARIABLES GLOBALES
@@ -82,9 +54,6 @@ let products = [];
 
 // Productos filtrados
 let filteredProducts = [];
-
-// Carrito
-let cart = [];
 
 // Favoritos
 let favorites = [];
@@ -156,6 +125,7 @@ products.forEach(product => {
 });
 
 */
+
 const url = "https://fakestoreapi.com/products";
 
 function getProducts() {
@@ -298,7 +268,6 @@ function renderCategories(productsArray) {
   categoryFilter.innerHTML = '<option value="all">Todas las categorías</option>';
 
   // opciones y Añadir al select
-  console.log(categoriasUnicas);
 
   categoriasUnicas.forEach(categoria => {
     const option = document.createElement("option");
@@ -349,7 +318,7 @@ function filterProducts() {
     return coincideNombre && coincideCategoria;
   });
 
-  // Ordenar 
+  // Ordenar
 
   if (ordenSeleccionado === "priceAsc") filteredProducts.sort((a, b) => a.price - b.price);
   if (ordenSeleccionado === "priceDesc") filteredProducts.sort((a, b) => b.price - a.price);
@@ -380,251 +349,12 @@ sortSelect.addEventListener(
   filterProducts
 );
 
-
-// ========================================
-// FASE 3 - CARRITO
-// ========================================
-
-/*
-OBJETIVO:
-Añadir productos al carrito.
-
-TAREAS:
-- Buscar producto por ID
-- Añadir al array carrito
-- Incrementar cantidad si ya existe
-- Guardar carrito
-- Renderizar carrito
-*/
-
-let totalPriceCart = 0;
-
-function updateCart() {
-  // Calcular costo
-  totalPriceCart = cart.reduce((total, item) => total + (item.cantidad * item.producto.price), 0).toFixed(2);
-  // 
-  cartTotal.textContent = `${totalPriceCart}€`;
-}
-
-function addToCart(id) {
-  // Buscar producto por ID
-  const producto = products.find((p) => p.id === id);
-
-  const productoEnCarrito = cart.find((p) => p.producto.id === id);
-
-  if (!productoEnCarrito) {
-    // Añadir al array carrito
-    cart.push({ producto: producto, cantidad: 1 });
-  } else {
-    // Incrementar cantidad si ya existe
-    productoEnCarrito.cantidad++;
-  }
-
-  //Guardar carrito
-  localStorage.setItem("carrito", JSON.stringify(cart));
-
-  //Renderizar carrito
-  renderCart();
-  updateCart();
-}
-
-
-/*
-OBJETIVO:
-Eliminar producto del carrito.
-
-/*
-OBJETIVO:
-Eliminar producto del carrito por completo.
-*/
-function removeFromCart(id) {
-  // Filtramos el array 'cart' comparando con el id dentro de 'item.producto'
-  cart = cart.filter(item => item.producto.id !== id);
-
-  // Guardamos en LocalStorage para que persista y volvemos a pintar
-  localStorage.setItem("carrito", JSON.stringify(cart));
-  renderCart();
-}
-
-/*
-OBJETIVO:
-Vaciar todo el carrito de golpe.
-*/
-function clearCart() {
-  cart = [];
-  localStorage.setItem("carrito", JSON.stringify(cart));
-  renderCart();
-}
-
-/*
-OBJETIVO:
-Incrementar o decrementar la cantidad de un artículo.
-*/
-function updateQuantity(id, action) {
-  const itemEnCarrito = cart.find(item => item.producto.id === id);
-
-  if (!itemEnCarrito) return;
-
-  if (action === "increment") {
-    itemEnCarrito.cantidad++;
-  } else if (action === "decrement") {
-    itemEnCarrito.cantidad--;
-
-    // Si la cantidad baja de 1, eliminamos el artículo por completo
-    if (itemEnCarrito.cantidad < 1) {
-      removeFromCart(id);
-      return; // Salimos de la función para evitar doble renderizado
-    }
-  }
-
-  // Guardamos el estado y actualizamos la interfaz
-  localStorage.setItem("carrito", JSON.stringify(cart));
-  renderCart();
-}
-
-
-
-
-
-/*
-OBJETIVO:
-Pintar carrito dinámicamente.
-
-MOSTRAR:
-- Nombre
-- Cantidad
-- Precio
-- Total carrito
-*/
-
-function renderCart() {
-  cartContainer.innerHTML = '';
-
-  if (cart.length < 1) {
-    const notProductsText = document.createElement("p");
-    notProductsText.textContent = "Agrega un producto a tu lista de compra";
-    cartContainer.append(notProductsText)
-
-    //  cartTotal lo ponemos a 0
-    if (cartTotal) cartTotal.textContent = "0.00€";
-    return;
-  }
-
-  // TODO
-  cart.map((item) => {
-    const producto = item.producto;
-    // calculo del subtotal y suma carrito
-    const precioSubtotal = producto.price * item.cantidad;
-
-    const cartItem = document.createElement("div");
-    cartItem.classList.add("cart-item");
-
-    const cardItemInfo = document.createElement("div");
-    cardItemInfo.classList.add("cart-item-info");
-
-    const cartItemTitle = document.createElement("p");
-    cartItemTitle.classList.add("cart-item-title");
-    cartItemTitle.textContent = producto.title;
-
-    // Contenedor para los controles de cantidad (+ / -)
-    const quantityControls = document.createElement("div");
-    quantityControls.classList.add("quantity-controls");
-
-    const btnDecrement = document.createElement("button");
-    btnDecrement.classList.add("btn-qty");
-    btnDecrement.textContent = "-";
-    btnDecrement.addEventListener("click", () => updateQuantity(producto.id, "decrement"));
-
-    const quantitySpan = document.createElement("span");
-    quantitySpan.classList.add("qty-number");
-    quantitySpan.textContent = ` ${item.cantidad} `;
-
-    const btnIncrement = document.createElement("button");
-    btnIncrement.classList.add("btn-qty");
-    btnIncrement.textContent = "+";
-    btnIncrement.addEventListener("click", () => updateQuantity(producto.id, "increment"));
-
-    quantityControls.append(btnDecrement, quantitySpan, btnIncrement);
-
-    const cartItemPrice = document.createElement("p");
-    cartItemPrice.classList.add("cart-item-price");
-
-    cartItemPrice.textContent = `${item.cantidad} x ${producto.price}€ (${precioSubtotal.toFixed(2)}€)`;
-
-    const removeBtn = document.createElement("button");
-    removeBtn.classList.add("remove-btn");
-    removeBtn.textContent = 'X';
-
-    // Conectamos función de eliminar
-    removeBtn.addEventListener("click", () => removeFromCart(producto.id));
-
-    cardItemInfo.append(cartItemTitle, quantityControls, cartItemPrice);
-    cartItem.append(cardItemInfo, removeBtn);
-    cartContainer.append(cartItem);
-  });
-
-  // Actualizar carrito
-  updateCart();
-
-  // Creamos la sección final del carrito para el botón "Vaciar Carrito"
-  const cartActionsContainer = document.createElement("div");
-  cartActionsContainer.classList.add("cart-menu-actions");
-
-
-
-  const clearCartBtn = document.createElement("button");
-  clearCartBtn.id = "clear-cart-btn";
-  clearCartBtn.textContent = "Vaciar Carrito";
-  clearCartBtn.addEventListener("click", clearCart);
-
-  cartActionsContainer.append(clearCartBtn);
-  cartContainer.append(cartActionsContainer);
-}
-
-
-// ========================================
-// FASE 4 - LOCAL STORAGE
-// ========================================
-
 /*
 ========================================
 EXTRA
 ========================================
 */
 
-
-/*
-OBJETIVO:
-Guardar carrito en localStorage.
-
-PISTA:
-JSON.stringify()
-*/
-
-function saveCart() {
-  // Convierte el array 'cart' a texto JSON y lo guarda con la clave 'carrito'
-  localStorage.setItem("carrito", JSON.stringify(cart));
-}
-
-/*
-OBJETIVO:
-Recuperar carrito guardado.
-
-PISTA:
-JSON.parse()
-*/
-
-function loadCart() {
-  // TODO
-  const carritoGuardado = localStorage.getItem("carrito");
-
-  if (carritoGuardado) {
-    // Convierte el texto JSON de vuelta a un array de objetos
-    cart = JSON.parse(carritoGuardado);
-    // Vuelve a pintar el carrito en la pantalla para que se vean los productos cargados
-    renderCart();
-  }
-}
 
 
 // ========================================
@@ -695,103 +425,6 @@ function pintarFavoritos() {
 }
 
 // ========================================
-// FASE 5 - LOGIN
-// ========================================
-
-// Abrir modal al pulsar "Mi cuenta"
-if (loginBtn) {
-  loginBtn.addEventListener("click", () => {
-    if (loginModal) {
-      loginModal.classList.remove("hidden");
-    }
-  });
-}
-
-// Cerrar modal al pulsar la equis (✕)
-if (closeLogin) {
-  closeLogin.addEventListener("click", () => {
-    if (loginModal) {
-      loginModal.classList.add("hidden");
-    }
-  });
-}
-
-/*
-========================================
-EXTRA
-========================================
-*/
-
-
-/*
-OBJETIVO:
-Simular login con FakeStoreAPI.
-
-ENDPOINT:
-https://fakestoreapi.com/auth/login
-
-USUARIO TEST:
-mor_2314
-83r5^_
-
-CONCEPTOS:
-- fetch POST
-- JSON.stringify()
-- sessionStorage
-
-TAREAS:
-- Capturar formulario
-- Enviar datos
-- Guardar token
-- Cerrar modal
-*/
-
-loginForm.addEventListener(
-  "submit",
-  (e) => {
-    e.preventDefault();
-
-    // Capturar formulario
-    const usernameValue = document.getElementById("username").value;
-    const passwordValue = document.getElementById("password").value;
-
-    // 2. enviar datos
-    fetch("https://fakestoreapi.com/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: usernameValue,
-        password: passwordValue,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Credenciales inválidas");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // 3. Guardar token
-        if (data.token) {
-          sessionStorage.setItem("token", data.token);
-
-          // 4 Cerrar modal
-          if (loginModal) {
-            loginModal.classList.add("hidden");
-          }
-          alert("¡Login correcto!");
-          checkSession();
-        }
-      })
-      .catch((error) => {
-        console.error("Error en el login:", error);
-        alert("Usuario o contraseña incorrectos.");
-      });
-
-  }
-);
-
-// ========================================
 // FASE 6 - SESIÓN
 // ========================================
 
@@ -801,110 +434,7 @@ EXTRA
 ========================================
 */
 
-
-/*
-OBJETIVO:
-Mantener sesión iniciada.
-
-TAREAS:
-- Detectar token
-- Mostrar login si no existe
-*/
-
-
-function checkSession() {
-  console.log("comprobando")
-  // TODO
-  const isLogin = sessionStorage.getItem('token');
-
-  if (isLogin) {
-    // Ocultar boton de login
-    loginBtn.setAttribute("hidden", true);
-    logoutBtn.removeAttribute("hidden");
-    // mostrar boton mi cuenta
-    accountBtn.removeAttribute("hidden");
-  } else {
-    // Mostrar login si no existe
-    loginBtn.removeAttribute("hidden");
-    logoutBtn.setAttribute("hidden", true);
-    // ocultar boton mi cuenta
-    accountBtn.setAttribute("hidden", true);
-  }
-}
-
-
-/*
-OBJETIVO:
-Cerrar sesión.
-
-TAREAS:
-- Eliminar token
-- Cerrar modal
-*/
-
-const logoutBtn = document.getElementById("logout-btn");
-logoutBtn.addEventListener("click", logout);
-
-
-function logout() {
-  // TODO
-  sessionStorage.removeItem('token');
-  cerrarModal();
-  checkSession();
-}
-
-
-// ========================================
-// MODAL LOGIN
-// ========================================
-
-/*
-========================================
-EXTRA
-========================================
-*/
-
-function cerrarModal() {
-  loginModal.classList.add("hidden");
-}
-
-function abrirModal() {
-  loginModal.classList.remove("hidden");
-}
-
-/*
-OBJETIVO:
-Abrir modal login.
-*/
-
-loginBtn.addEventListener("click", abrirModal);
-
-
-/*
-OBJETIVO:
-Cerrar modal login.
-*/
-
-closeLogin.addEventListener("click", cerrarModal);
-
-
-/*
-OBJETIVO:
-Cerrar modal clicando fuera.
-*/
-
-loginModal.addEventListener(
-  "click",
-  (e) => {
-
-    // TODO
-    if (e.target === loginModal) {
-      cerrarModal();
-    }
-  }
-);
-
-
+// SE ENCUENTRA EN LOGIN.JS
 
 function finalizarCompra(e){
   e.preventDefault();
