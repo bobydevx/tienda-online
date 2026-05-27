@@ -55,8 +55,8 @@ const loginModal =
   document.getElementById("loginModal");
 
 // Botón abrir login
-const cartBtn =
-  document.querySelector("#cart-btn");
+const loginBtn =
+  document.querySelector("#login-btn");
 
 // Botón cerrar login
 const closeLogin =
@@ -65,6 +65,9 @@ const closeLogin =
 // Formulario login
 const loginForm =
   document.getElementById("loginForm");
+
+// Botón Mi cuenta
+const accountBtn = document.getElementById("account-btn");
 
 
 // ========================================
@@ -236,8 +239,7 @@ function renderProducts(productsArray) {
 
     const productPrice = document.createElement("p");
     productPrice.classList.add("product-price");
-    //productPrice.textContent = producto.price;
-    productPrice.textContent = `${producto.price}€`; // AÑADIR MONEDA A LOS ARTICULOS
+    productPrice.textContent = `${producto.price}€`;
 
     const cardActions = document.createElement("div");
     cardActions.classList.add("card-actions");
@@ -417,9 +419,6 @@ function addToCart(id) {
 
   //Guardar carrito
   localStorage.setItem("carrito", JSON.stringify(cart));
-
-  // Calcular costo
-  const total = cart.reduce((total, item) => total + (item.cantidad * item.producto.price), 0).toFixed(2);
 
   //Renderizar carrito
   renderCart();
@@ -697,8 +696,8 @@ function pintarFavoritos() {
 // ========================================
 
 // Abrir modal al pulsar "Mi cuenta"
-if (cartBtn) {
-  cartBtn.addEventListener("click", () => {
+if (loginBtn) {
+  loginBtn.addEventListener("click", () => {
     if (loginModal) {
       loginModal.classList.remove("hidden");
     }
@@ -747,7 +746,6 @@ TAREAS:
 loginForm.addEventListener(
   "submit",
   (e) => {
-
     e.preventDefault();
 
     // Capturar formulario
@@ -818,13 +816,16 @@ function checkSession() {
 
   if (isLogin) {
     // Ocultar boton de login
-    cartBtn.setAttribute("hidden", true);
+    loginBtn.setAttribute("hidden", true);
     logoutBtn.removeAttribute("hidden");
+    // mostrar boton mi cuenta
+    accountBtn.removeAttribute("hidden");
   } else {
     // Mostrar login si no existe
-    cartBtn.removeAttribute("hidden");
+    loginBtn.removeAttribute("hidden");
     logoutBtn.setAttribute("hidden", true);
-
+    // ocultar boton mi cuenta
+    accountBtn.setAttribute("hidden", true);
   }
 }
 
@@ -873,7 +874,7 @@ OBJETIVO:
 Abrir modal login.
 */
 
-cartBtn.addEventListener("click", abrirModal);
+loginBtn.addEventListener("click", abrirModal);
 
 
 /*
@@ -894,7 +895,7 @@ loginModal.addEventListener(
   (e) => {
 
     // TODO
-    if(e.target === loginModal){
+    if (e.target === loginModal) {
       cerrarModal();
     }
   }
@@ -924,9 +925,7 @@ function init() {
   renderCart();
   // Cargar favoritos
   setTimeout(() => loadFavorites(), 100);
-  // loadFavorites();
-
-  // 
+  // Comprobar sesión
   checkSession();
 }
 
