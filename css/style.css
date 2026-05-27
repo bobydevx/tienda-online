@@ -8,7 +8,9 @@ RESET
   box-sizing:border-box;
 }
 
-
+a {
+  text-decoration: none;
+}
 /* ========================================
 VARIABLES
 ======================================== */
