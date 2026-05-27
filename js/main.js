@@ -69,6 +69,9 @@ const loginForm =
 // Botón Mi cuenta
 const accountBtn = document.getElementById("account-btn");
 
+// Boton Finalizar Compra
+const finalizarCompraBtn = document.getElementById("finalizar-btn");
+finalizarCompraBtn.addEventListener("click",finalizarCompra);
 
 // ========================================
 // VARIABLES GLOBALES
@@ -901,6 +904,13 @@ loginModal.addEventListener(
   }
 );
 
+
+
+function finalizarCompra(e){
+  e.preventDefault();
+
+  window.location.replace("/carrito.html")
+}
 
 // ========================================
 // INIT APP
